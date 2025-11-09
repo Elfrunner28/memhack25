@@ -141,7 +141,7 @@ export default function Home() {
           <div className="container">
             <div className="section-header">
               <span className="section-label">Understanding the Problem</span>
-              <h2 className="section-title">There's No Stopping It</h2>
+              <h2 className="section-title">Limited Foresight</h2>
               <p className="section-description">
                 With a large geographic service area and finite resources, Memphis faces
                 significant challenges in effectively prioritizing blight mitigation efforts.
@@ -150,8 +150,8 @@ export default function Home() {
 
             <div className="problem-grid">
               <div className="problem-card">
-                <div className="problem-icon">🔄</div>
-                <h3>Recurring Issues</h3>
+                <div className="problem-icon"></div>
+                <h3>Recurring Blight</h3>
                 <p>
                   Problem properties where the same issues happen repeatedly, including
                   illegal dumping piles and high weeds/grass in vacant lots.
@@ -159,32 +159,23 @@ export default function Home() {
               </div>
 
               <div className="problem-card">
-                <div className="problem-icon">📊</div>
+                <div className="problem-icon"></div>
                 <h3>Multiple Data Sources</h3>
                 <p>
-                  Challenge of integrating various data sources beyond 311 service
-                  requests to create a comprehensive prioritization system.
+                  Exhaustive data sets that don't always integrate seamlessly, creating challenges in developing a comprehensive prioritization system.
                 </p>
               </div>
               <div className="problem-card">
-                <div className="problem-icon">🎯</div>
+                <div className="problem-icon"></div>
                 <h3>Resource Allocation</h3>
                 <p>
-                  Need for proper allocation of finite resources based on which
-                  properties, communities, and property owners indicate recurring problems.
+                   Difficulties in allocating resources and prioritizing neighborhoods when future blight patterns cannot be accurately anticipated.
                 </p>
               </div>
               <div className="hero-buttons">
                 </div>       
             </div>
-              <div className="problem-card">
-              <div className="problem-icon">🏘️</div>
-              <h3>Geographic Coverage</h3>
-              <p>
-                Managing blight mitigation across Memphis' extensive service area
-                requires strategic prioritization and efficient planning.
-              </p>
-            </div>
+             
           </div>
         </section>
 

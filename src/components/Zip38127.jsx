@@ -1,10 +1,10 @@
 function Zip38127() {
   return (
     <div style={{ lineHeight: 1.6 }}>
-      {/* Top Section: Title/Description Left, Graph Right */}
+      {/* Top Section: Title/Description Left, Detailed Text Right (copied from 38118 format) */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: '1fr 400px', 
+        gridTemplateColumns: '1fr 560px', 
         gap: '2rem', 
         marginBottom: '2rem',
         alignItems: 'start'
@@ -17,7 +17,7 @@ function Zip38127() {
             marginBottom: '1rem',
             color: '#ffffff'
           }}>
-            ZIP 38127: Frayser
+            Frayser
           </h2>
           <p style={{ 
             fontSize: '1.1rem', 
@@ -45,100 +45,72 @@ function Zip38127() {
           </div>
         </div>
 
-        {/* Right: Smaller Graph */}
+        {/* Right: Larger Text Box (moved up) */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(14px)',
-          border: '1px solid rgba(255, 255, 255, 0.25)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.45)'
+          background: 'rgba(255, 255, 255, 0.06)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '12px',
+          padding: '1.25rem',
+          marginTop: '0'
         }}>
-          <img 
-            src="/images/plots/Frayser_predictors_vs_blight.png" 
-            alt="Frayser Neighborhood Analysis" 
-            style={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: '8px',
-              marginBottom: '1rem'
-            }}
-          />
           <h3 style={{ 
-            fontSize: '1.2rem', 
-            marginBottom: '0.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
+            marginTop: 0, 
+            marginBottom: '1rem',
+            fontSize: '1.25rem',
             color: '#ffffff'
           }}>
-            Frayser
-            <span style={{
-              display: 'inline-block',
-              padding: '0.25rem 0.75rem',
-              background: '#ef4444',
-              color: '#ffffff',
-              borderRadius: '6px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              textTransform: 'uppercase'
-            }}>High Risk</span>
+            Detailed Analysis & Recommendations
           </h3>
-          <p style={{ fontSize: '0.9rem', color: '#a0a0b2', margin: 0 }}>
-            Multi-factor correlation analysis
-          </p>
+
+          <div style={{ fontSize: '0.95rem', color: '#d0d0e0', lineHeight: 1.7 }}>
+            <h4 style={{ color: '#ffffff', marginTop: '0', marginBottom: '0.5rem' }}>
+              Current Situation
+            </h4>
+            <p>
+              The Frayser neighborhood faces complex, interconnected blight challenges. Analysis 
+              reveals concentrated areas where property deterioration accelerates due to combinations 
+              of evictions, crime, and code violations. Properties within identified clusters show 
+              an 85% correlation between these factors and rapid decline.
+            </p>
+
+            <h4 style={{ color: '#ffffff', marginTop: '1rem', marginBottom: '0.5rem' }}>
+              Predictive Insights
+            </h4>
+            <p>
+              Our predictive model identifies properties at immediate risk by analyzing temporal 
+              patterns across data sources. Areas showing increased police activity combined with 
+              nearby evictions demonstrate a 3.1x higher probability of code violations within 
+              6 months. Early detection enables proactive intervention before conditions worsen.
+            </p>
+
+           
+          </div>
         </div>
       </div>
 
-      {/* Bottom Section: Larger Text Box */}
+      {/* Now show the image as a full-width card below (copied from 38118) */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.06)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '12px',
-        padding: '2rem',
-        marginTop: '2rem'
+        marginTop: '1.5rem',
+        background: 'rgba(255, 255, 255, 0.08)',
+        borderRadius: '16px',
+        padding: '1rem',
+        border: '1px solid rgba(255,255,255,0.12)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.35)'
       }}>
-        <h3 style={{ 
-          marginTop: 0, 
-          marginBottom: '1.5rem',
-          fontSize: '1.5rem',
-          color: '#ffffff'
-        }}>
-          Detailed Analysis & Recommendations
-        </h3>
-        
-        <div style={{ fontSize: '1rem', color: '#d0d0e0', lineHeight: 1.8 }}>
-          <h4 style={{ color: '#ffffff', marginTop: '0', marginBottom: '0.75rem' }}>
-            Current Situation
-          </h4>
-          <p>
-            The Frayser neighborhood faces complex, interconnected blight challenges. Analysis 
-            reveals concentrated areas where property deterioration accelerates due to combinations 
-            of evictions, crime, and code violations. Properties within identified clusters show 
-            an 85% correlation between these factors and rapid decline.
-          </p>
-
-          <h4 style={{ color: '#ffffff', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
-            Predictive Insights
-          </h4>
-          <p>
-            Our predictive model identifies properties at immediate risk by analyzing temporal 
-            patterns across data sources. Areas showing increased police activity combined with 
-            nearby evictions demonstrate a 3.1x higher probability of code violations within 
-            6 months. Early detection enables proactive intervention before conditions worsen.
-          </p>
-
-          <h4 style={{ color: '#ffffff', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
-            Recommended Actions
-          </h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
-            <li>Deploy concentrated enforcement resources to identified high-risk zones</li>
-            <li>Establish rapid response protocols for properties entering decline phase</li>
-            <li>Create targeted community revitalization programs in cluster areas</li>
-            <li>Implement predictive inspection schedules based on risk scoring</li>
-            <li>Coordinate with social services to address underlying housing instability</li>
-            <li>Monitor and respond to emerging hotspots using real-time data</li>
-          </ul>
+        <img 
+          src="/images/plots/Frayser_predictors_vs_blight.png" 
+          alt="Frayser Neighborhood Analysis" 
+          style={{
+            width: '100%',
+            height: 'auto',
+            maxHeight: '80vh',
+            objectFit: 'contain',
+            borderRadius: '12px'
+          }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem' }}>
+          <h3 style={{ margin: 0, color: '#ffffff' }}>Frayser <span style={{ marginLeft: '0.5rem', background: '#ef4444', color: '#fff', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>High Risk</span></h3>
+          <p style={{ margin: 0, color: '#a0a0b2' }}>Multi-factor correlation analysis</p>
         </div>
       </div>
     </div>

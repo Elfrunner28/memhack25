@@ -17,7 +17,7 @@ function Zip38118() {
             marginBottom: '1rem',
             color: '#ffffff'
           }}>
-            ZIP 38118: Parkway Village & Oakville
+            Parkway Village & Oakville
           </h2>
           <p style={{ 
             fontSize: '1.1rem', 
