@@ -1,7 +1,7 @@
-function Zip38128() {
+function Zip38118() {
   return (
     <div style={{ lineHeight: 1.5 }}>
-      <h2 style={{ marginTop: 0 }}>ZIP 38128 </h2>
+      <h2 style={{ marginTop: 0 }}>ZIP 38118: Parkway Village and Oakville </h2>
       <p></p>
       <ul>
         <li>Example metric A</li>
@@ -11,4 +11,4 @@ function Zip38128() {
   );
 }
 
-export default Zip38128;
+export default Zip38118;

@@ -3,7 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Zip38127 from "./Zip38127";
-import Zip38128 from "./Zip38128";
+import Zip38118 from "./Zip38118";
 
 /** Blank fallback for undecided ZIPs */
 function BlankZip({ zip }) {
@@ -18,7 +18,7 @@ function BlankZip({ zip }) {
 }
 
 const ZIP_COMPONENTS = {
-  38128: Zip38128,
+  38118: Zip38118,
   38127: Zip38127,
 };
 

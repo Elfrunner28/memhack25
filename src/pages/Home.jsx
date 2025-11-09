@@ -122,7 +122,7 @@ export default function Home() {
                   <div className="stat-label">Data Sources</div>
                 </div>
                 <div className="stat">
-                  <div className="stat-number">97,427</div>
+                  <div className="stat-number">30,604</div>
                   <div className="stat-label">Data Entries</div>
                 </div>
                 <div className="stat">
