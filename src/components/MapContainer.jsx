@@ -186,7 +186,7 @@ function MapContainer() {
   // Modal to document.body
   const ModalPortal = () => {
     if (!modalOpen) return null;
-    
+
     return ReactDOM.createPortal(
       <div
         className="modal-overlay"
@@ -251,6 +251,19 @@ function MapContainer() {
             }}
           >
             ZIP {selectedZip || ""}
+            <span
+              style={{
+                marginLeft: "0.9rem",
+                background: "#ef4444",
+                color: "#fff",
+                padding: "0.4rem 0.6rem",
+                borderRadius: "6px",
+                fontSize: "2rem",
+                fontWeight: 600,
+              }}
+            >
+              High Risk
+            </span>
           </h1>
 
           {selectedZip ? (
