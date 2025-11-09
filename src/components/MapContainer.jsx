@@ -1,10 +1,56 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+
+/** ---- Simple per-ZIP content components (demo two, others blank) ---- */
+function Zip38128() {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP 38128 </h2>
+      <p></p>
+      <ul>
+        <li>Example metric A</li>
+        <li>Example metric B</li>
+      </ul>
+    </div>
+  );
+}
+
+function Zip38127() {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP 38127 — Demo Panel</h2>
+      <p>Custom content for 38127 goes here.</p>
+      <p>
+        You can replace this with a real component later (tables, embeds, etc.).
+      </p>
+    </div>
+  );
+}
+
+/** Blank fallback for undecided ZIPs */
+function BlankZip({ zip }) {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP {zip}</h2>
+      <p>
+        No content yet. (This one is intentionally left blank for the demo.)
+      </p>
+    </div>
+  );
+}
+
+const ZIP_COMPONENTS = {
+  38128: Zip38128,
+  38127: Zip38127,
+};
 
 function MapContainer() {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedZip, setSelectedZip] = useState(null);
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -16,64 +62,76 @@ function MapContainer() {
       container: mapContainerRef.current,
       style: "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541",
       center: [-90.049, 35.146],
-      zoom: 10,
+      zoom: 8,
     });
+
+    map.scrollZoom.disable();
+    map.dragPan.disable();
+    map.dragRotate.disable();
+    map.keyboard.disable();
+    map.doubleClickZoom.disable();
+    map.touchZoomRotate.disable();
+    map.boxZoom.disable();
 
     mapRef.current = map;
 
     map.on("load", async () => {
-      console.log("Map style loaded successfully!");
-
-      const geo = await fetch("/memphis.clean.json").then((r) => r.json());
+      const geo = await fetch("/memphis.json").then((r) => r.json());
 
       map.addSource("memphis", {
         type: "geojson",
         data: geo,
       });
 
-      // ZIPs to highlight red
-      const targetZips = ["38128", "38127", "38118", "38114"];
+      const redZips = ["38128", "38127", "38118", "38114"];
 
+      // Base fill (white)
       map.addLayer({
         id: "memphis-fill",
         type: "fill",
         source: "memphis",
         paint: {
-          // Red for target ZIPs, white for everything else
-          "fill-color": [
-            "match",
-            ["to-string", ["get", "Name"]],
-            targetZips,
-            "#ef4444", // red-500
-            "#ffffff", // white
-          ],
-          // Make target ZIPs a bit more opaque
-          "fill-opacity": [
-            "case",
-            ["in", ["to-string", ["get", "Name"]], ["literal", targetZips]],
-            0.6, // selected
-            0.25, // others
-          ],
+          "fill-color": "#ffffff",
+          "fill-opacity": 0.2,
         },
       });
 
+      // Red highlight for selected
+      map.addLayer({
+        id: "hot-zips",
+        type: "fill",
+        source: "memphis",
+        paint: {
+          "fill-color": "#ff0000",
+          "fill-opacity": 0.5,
+        },
+        filter: ["in", ["to-string", ["get", "Name"]], ["literal", redZips]],
+      });
+
+      // Outline
       map.addLayer({
         id: "memphis-outline",
         type: "line",
         source: "memphis",
         paint: {
-          // Darker outline for selected ZIPs; light gray for others
-          "line-color": [
-            "case",
-            ["in", ["to-string", ["get", "Name"]], ["literal", targetZips]],
-            "#7f1d1d", // dark red
-            "#1f2937", // gray-800 (tweak to taste)
-          ],
-          "line-width": 2,
+          "line-color": "#333",
+          "line-width": 1.5,
         },
       });
 
-      // Fit bounds (unchanged)
+      map.on("mouseenter", "hot-zips", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "hot-zips", () => {
+        map.getCanvas().style.cursor = "";
+      });
+      map.on("click", "hot-zips", (e) => {
+        const zip = e.features?.[0]?.properties?.Name?.toString();
+        if (!zip) return;
+        setSelectedZip(zip);
+        setModalOpen(true);
+      });
+
       const bounds = new mapboxgl.LngLatBounds();
       geo.features.forEach((f) => {
         const coords =
@@ -82,12 +140,11 @@ function MapContainer() {
             : f.geometry.type === "MultiPolygon"
             ? f.geometry.coordinates.flat(2)
             : [];
-        coords.forEach((c) => bounds.extend(c.slice(0, 2))); // ignore altitude if present
+        coords.forEach((c) => bounds.extend([c[0], c[1]])); // ignore altitude if present
       });
       if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 40 });
     });
 
-    // Cleanup
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -96,8 +153,70 @@ function MapContainer() {
     };
   }, []);
 
+  const Content = selectedZip && ZIP_COMPONENTS[selectedZip];
+
   return (
-    <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
+    <>
+      <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
+
+      {modalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            style={{
+              width: "80vw",
+              height: "80vh",
+              background: "white",
+              borderRadius: "8px",
+              padding: "20px",
+              position: "relative",
+              overflow: "auto",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setModalOpen(false)}
+              style={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                padding: "6px 10px",
+                cursor: "pointer",
+                borderRadius: 6,
+                border: "1px solid #ddd",
+                background: "#f7f7f7",
+              }}
+            >
+              Back to Map
+            </button>
+
+            {/* Header always shows selected ZIP */}
+            <h1 style={{ marginTop: 0, marginRight: 120 }}>
+              {selectedZip || ""}
+            </h1>
+
+            {/* ZIP-specific content (two demo zips) or blank fallback */}
+            {selectedZip ? (
+              Content ? (
+                <Content />
+              ) : (
+                <BlankZip zip={selectedZip} />
+              )
+            ) : null}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
