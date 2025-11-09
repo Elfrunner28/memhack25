@@ -17,8 +17,8 @@ export default function Home() {
       const sections = [
         { id: "hero", ref: heroRef },
         { id: "problem", ref: problemRef },
+        { id: "data", ref: dataRef }, // moved "data" up so order matches the DOM (data appears before solution)
         { id: "solution", ref: solutionRef },
-        { id: "data", ref: dataRef },
         { id: "nextSteps", ref: nextStepsRef },
       ];
 
@@ -69,6 +69,16 @@ export default function Home() {
               <span className="nav-dot"></span>
               Understanding the Problem
             </button>
+
+            {/* moved "Looking in to the future" up (data) */}
+            <button
+              className={`nav-link ${activeSection === "data" ? "active" : ""}`}
+              onClick={() => scrollToSection(dataRef)}
+            >
+              <span className="nav-dot"></span>
+              Goal
+            </button>
+
             <button
               className={`nav-link ${activeSection === "solution" ? "active" : ""}`}
               onClick={() => scrollToSection(solutionRef)}
@@ -76,13 +86,7 @@ export default function Home() {
               <span className="nav-dot"></span>
               Recognizing a pattern
             </button>
-            <button
-              className={`nav-link ${activeSection === "data" ? "active" : ""}`}
-              onClick={() => scrollToSection(dataRef)}
-            >
-              <span className="nav-dot"></span>
-              Looking in to the future
-            </button>
+
             <button
               className={`nav-link ${activeSection === "nextSteps" ? "active" : ""}`}
               onClick={() => scrollToSection(nextStepsRef)}
@@ -183,7 +187,7 @@ export default function Home() {
         <section ref={dataRef} className="section data-section">
           <div className="container">
             <div className="section-header">
-              <span className="section-label">Looking in to the future</span>
+              <span className="section-label">Goal2</span>
               <h2 className="section-title">Predictive Insights</h2>
               <p className="section-description">
                 By analyzing historical patterns across multiple data sources, we can predict 
@@ -461,4 +465,3 @@ export default function Home() {
     </div>
   );
 }
-  
