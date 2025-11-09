@@ -2,32 +2,9 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import Zip38127 from "./Zip38127";
+import Zip38128 from "./Zip38128";
 
-/** ---- Simple per-ZIP content components (demo two, others blank) ---- */
-function Zip38128() {
-  return (
-    <div style={{ lineHeight: 1.5 }}>
-      <h2 style={{ marginTop: 0 }}>ZIP 38128 </h2>
-      <p></p>
-      <ul>
-        <li>Example metric A</li>
-        <li>Example metric B</li>
-      </ul>
-    </div>
-  );
-}
-
-function Zip38127() {
-  return (
-    <div style={{ lineHeight: 1.5 }}>
-      <h2 style={{ marginTop: 0 }}>ZIP 38127 — Demo Panel</h2>
-      <p>Custom content for 38127 goes here.</p>
-      <p>
-        You can replace this with a real component later (tables, embeds, etc.).
-      </p>
-    </div>
-  );
-}
 
 /** Blank fallback for undecided ZIPs */
 function BlankZip({ zip }) {
@@ -229,7 +206,7 @@ function MapContainer() {
               e.target.style.transform = "translateY(0)";
             }}
           >
-            ✕ Close
+            Back to Map
           </button>
 
           {/* Header always shows selected ZIP */}
