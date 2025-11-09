@@ -2,6 +2,49 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect, useState } from "react";
 
+/** ---- Simple per-ZIP content components (demo two, others blank) ---- */
+function Zip38128() {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP 38128 </h2>
+      <p></p>
+      <ul>
+        <li>Example metric A</li>
+        <li>Example metric B</li>
+      </ul>
+    </div>
+  );
+}
+
+function Zip38127() {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP 38127 — Demo Panel</h2>
+      <p>Custom content for 38127 goes here.</p>
+      <p>
+        You can replace this with a real component later (tables, embeds, etc.).
+      </p>
+    </div>
+  );
+}
+
+/** Blank fallback for undecided ZIPs */
+function BlankZip({ zip }) {
+  return (
+    <div style={{ lineHeight: 1.5 }}>
+      <h2 style={{ marginTop: 0 }}>ZIP {zip}</h2>
+      <p>
+        No content yet. (This one is intentionally left blank for the demo.)
+      </p>
+    </div>
+  );
+}
+
+const ZIP_COMPONENTS = {
+  38128: Zip38128,
+  38127: Zip38127,
+};
+
 function MapContainer() {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
@@ -19,8 +62,17 @@ function MapContainer() {
       container: mapContainerRef.current,
       style: "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541",
       center: [-90.049, 35.146],
-      zoom: 10,
+      zoom: 8,
     });
+
+    map.scrollZoom.disable();
+    map.dragPan.disable();
+    map.dragRotate.disable();
+    map.keyboard.disable();
+    map.doubleClickZoom.disable();
+    map.touchZoomRotate.disable();
+    map.boxZoom.disable();
+
     mapRef.current = map;
 
     map.on("load", async () => {
@@ -33,6 +85,7 @@ function MapContainer() {
 
       const redZips = ["38128", "38127", "38118", "38114"];
 
+      // Base fill (white)
       map.addLayer({
         id: "memphis-fill",
         type: "fill",
@@ -43,6 +96,7 @@ function MapContainer() {
         },
       });
 
+      // Red highlight for selected
       map.addLayer({
         id: "hot-zips",
         type: "fill",
@@ -54,6 +108,7 @@ function MapContainer() {
         filter: ["in", ["to-string", ["get", "Name"]], ["literal", redZips]],
       });
 
+      // Outline
       map.addLayer({
         id: "memphis-outline",
         type: "line",
@@ -70,9 +125,9 @@ function MapContainer() {
       map.on("mouseleave", "hot-zips", () => {
         map.getCanvas().style.cursor = "";
       });
-
       map.on("click", "hot-zips", (e) => {
-        const zip = e.features[0].properties.Name;
+        const zip = e.features?.[0]?.properties?.Name?.toString();
+        if (!zip) return;
         setSelectedZip(zip);
         setModalOpen(true);
       });
@@ -85,9 +140,9 @@ function MapContainer() {
             : f.geometry.type === "MultiPolygon"
             ? f.geometry.coordinates.flat(2)
             : [];
-        coords.forEach((c) => bounds.extend([c[0], c[1]]));
+        coords.forEach((c) => bounds.extend([c[0], c[1]])); // ignore altitude if present
       });
-      map.fitBounds(bounds, { padding: 40 });
+      if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 40 });
     });
 
     return () => {
@@ -97,6 +152,8 @@ function MapContainer() {
       }
     };
   }, []);
+
+  const Content = selectedZip && ZIP_COMPONENTS[selectedZip];
 
   return (
     <>
@@ -123,6 +180,7 @@ function MapContainer() {
               borderRadius: "8px",
               padding: "20px",
               position: "relative",
+              overflow: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -132,14 +190,29 @@ function MapContainer() {
                 position: "absolute",
                 top: 10,
                 right: 10,
-                padding: "5px 10px",
+                padding: "6px 10px",
                 cursor: "pointer",
+                borderRadius: 6,
+                border: "1px solid #ddd",
+                background: "#f7f7f7",
               }}
             >
               Back to Map
             </button>
 
-            <h1>{selectedZip}</h1>
+            {/* Header always shows selected ZIP */}
+            <h1 style={{ marginTop: 0, marginRight: 120 }}>
+              {selectedZip || ""}
+            </h1>
+
+            {/* ZIP-specific content (two demo zips) or blank fallback */}
+            {selectedZip ? (
+              Content ? (
+                <Content />
+              ) : (
+                <BlankZip zip={selectedZip} />
+              )
+            ) : null}
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
-import MemphisMap from "../components/MemphisMap";
+import MapContainer from "../components/MapContainer";
 
 function Map() {
-  return <MemphisMap />;
+  return <MapContainer />;
 }
 
 export default Map;
