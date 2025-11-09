@@ -151,17 +151,7 @@ export default function Home() {
             <div className="map-container-box">
               <div className="map-wrapper-compact">
                 <MapContainer />
-                <div className="map-legend">
-                  <h4>Legend</h4>
-                  <div className="legend-item">
-                    <span className="legend-color high-priority"></span>
-                    <span>High Priority Zones</span>
-                  </div>
-                  <div className="legend-item">
-                    <span className="legend-color other-areas"></span>
-                    <span>Other Areas</span>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>
