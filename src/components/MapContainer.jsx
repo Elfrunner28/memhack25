@@ -5,7 +5,6 @@ import ReactDOM from "react-dom";
 import Zip38127 from "./Zip38127";
 import Zip38128 from "./Zip38128";
 
-
 /** Blank fallback for undecided ZIPs */
 function BlankZip({ zip }) {
   return (
@@ -23,6 +22,27 @@ const ZIP_COMPONENTS = {
   38127: Zip38127,
 };
 
+// ---- Config ----
+const MAP_STYLE = "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541"; // your dark style
+const HOT_ZIPS = ["38128", "38127", "38118", "38114"]; // always the reddest
+
+// Simple deterministic hash -> [0, 1)
+function hashStringToUnit(str) {
+  let h = 2166136261; // FNV-1a base
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  // convert to unsigned 32-bit then normalize
+  const u = (h >>> 0) / 0xffffffff;
+  return u;
+}
+
+// Ease a bit so midtones are richer (feel more “varied”)
+function easeInOut(t) {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+}
+
 function MapContainer() {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
@@ -38,11 +58,12 @@ function MapContainer() {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541",
-      center: [-90, 35.04],
+      style: MAP_STYLE,
+      center: [-90.0, 35.04],
       zoom: 9.9,
     });
 
+    // Lock the map (no scroll/zoom/pan)
     map.scrollZoom.disable();
     map.dragPan.disable();
     map.dragRotate.disable();
@@ -54,78 +75,102 @@ function MapContainer() {
     mapRef.current = map;
 
     map.on("load", async () => {
-      const geo = await fetch("/memphis.json").then((r) => r.json());
+      // Load your polygons
+      const rawGeo = await fetch("/memphis.json").then((r) => r.json());
 
-      map.addSource("memphis", {
-        type: "geojson",
-        data: geo,
-      });
+      // Add deterministic heat value per ZIP (non-changing across reloads)
+      const geo = {
+        ...rawGeo,
+        features: rawGeo.features.map((f) => {
+          const name = String(f.properties?.Name ?? "");
+          // HOT_ZIPS forced to max (1). Others get seeded value in [0.15, 0.9] then eased.
+          let heat = HOT_ZIPS.includes(name)
+            ? 1
+            : easeInOut(0.15 + 0.75 * hashStringToUnit(name));
+          return {
+            ...f,
+            properties: {
+              ...f.properties,
+              heat,
+            },
+          };
+        }),
+      };
 
-      const redZips = ["38128", "38127", "38118", "38114"];
+      // Add as a source
+      if (map.getSource("memphis")) map.removeSource("memphis");
+      map.addSource("memphis", { type: "geojson", data: geo });
 
-      // Base fill (white)
+      // One fill layer for everything using a color ramp:
+      // white -> soft yellow -> amber -> red
+      // Hot zips will also be heat=1, so they hit the reddest stop.
       map.addLayer({
-        id: "memphis-fill",
+        id: "zip-fill",
         type: "fill",
         source: "memphis",
         paint: {
-          "fill-color": "#ffffff",
-          "fill-opacity": 0.2,
+          // Color ramp from heat property
+          "fill-color": [
+            "case",
+            // Safety: if heat missing, make it very light
+            ["!", ["has", "heat"]],
+            "#ffffff",
+            [
+              "interpolate",
+              ["linear"],
+              ["get", "heat"],
+              0,
+              "#ffffff", // white
+              0.35,
+              "#fff6cc", // pale yellow
+              0.6,
+              "#ffca5c", // amber
+              0.8,
+              "#ff8a33", // orange-red
+              1,
+              "#ff2a2a", // red (hottest)
+            ],
+          ],
+          // Slightly higher opacity so it stands out on dark basemap
+          "fill-opacity": 0.7,
         },
       });
 
-      // Red highlight for selected
+      // Outline layer so polygons pop on a dark map
       map.addLayer({
-        id: "hot-zips",
-        type: "fill",
-        source: "memphis",
-        paint: {
-          "fill-color": "#ff0000",
-          "fill-opacity": 0.5,
-        },
-        filter: ["in", ["to-string", ["get", "Name"]], ["literal", redZips]],
-      });
-
-      // Outline
-      map.addLayer({
-        id: "memphis-outline",
+        id: "zip-outline",
         type: "line",
         source: "memphis",
         paint: {
-          "line-color": "#333",
-          "line-width": 1.5,
+          "line-color": "rgba(255,255,255,0.55)", // light outline for dark base
+          "line-width": 1.2,
         },
       });
 
-      map.on("mouseenter", "hot-zips", () => {
+      // Invisible "hit" layer on top just for clicks/hover on HOT_ZIPS
+      map.addLayer({
+        id: "hot-zips-hit",
+        type: "fill",
+        source: "memphis",
+        paint: {
+          "fill-opacity": 0, // invisible but still interactive
+        },
+        filter: ["in", ["to-string", ["get", "Name"]], ["literal", HOT_ZIPS]],
+      });
+
+      // Cursor + click to open modal (only for the four hot zips)
+      map.on("mouseenter", "hot-zips-hit", () => {
         map.getCanvas().style.cursor = "pointer";
       });
-      map.on("mouseleave", "hot-zips", () => {
+      map.on("mouseleave", "hot-zips-hit", () => {
         map.getCanvas().style.cursor = "";
       });
-      map.on("click", "hot-zips", (e) => {
+      map.on("click", "hot-zips-hit", (e) => {
         const zip = e.features?.[0]?.properties?.Name?.toString();
         if (!zip) return;
         setSelectedZip(zip);
         setModalOpen(true);
       });
-
-      // Comment out fitBounds so the initial center/zoom are respected
-      // const bounds = new mapboxgl.LngLatBounds();
-      // geo.features.forEach((f) => {
-      //   const coords =
-      //     f.geometry.type === "Polygon"
-      //       ? f.geometry.coordinates.flat(1)
-      //       : f.geometry.type === "MultiPolygon"
-      //       ? f.geometry.coordinates.flat(2)
-      //       : [];
-      //   coords.forEach((c) => bounds.extend([c[0], c[1]]));
-      // });
-      // if (!bounds.isEmpty()) {
-      //   map.fitBounds(bounds, { 
-      //     padding: { top: 120, bottom: 40, left: 40, right: 40 }
-      //   });
-      // }
     });
 
     return () => {
@@ -138,10 +183,9 @@ function MapContainer() {
 
   const Content = selectedZip && ZIP_COMPONENTS[selectedZip];
 
-  // Modal component that renders to document.body
+  // Modal to document.body
   const ModalPortal = () => {
     if (!modalOpen) return null;
-
     return ReactDOM.createPortal(
       <div
         className="modal-overlay"
@@ -166,8 +210,6 @@ function MapContainer() {
             maxWidth: "1200px",
             height: "85vh",
             background: "rgba(18, 18, 26, 0.95)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
             border: "1px solid rgba(255, 255, 255, 0.25)",
             borderRadius: "1.5rem",
             padding: "2.5rem",
@@ -193,28 +235,23 @@ function MapContainer() {
               color: "#ffffff",
               fontWeight: 600,
               fontSize: "0.95rem",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
               transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "rgba(255, 255, 255, 0.20)";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "rgba(255, 255, 255, 0.14)";
-              e.target.style.transform = "translateY(0)";
             }}
           >
             Back to Map
           </button>
 
-          {/* Header always shows selected ZIP */}
-          <h1 style={{ marginTop: 0, marginRight: 140, fontSize: "2.5rem", fontWeight: 700 }}>
+          <h1
+            style={{
+              marginTop: 0,
+              marginRight: 140,
+              fontSize: "2.4rem",
+              fontWeight: 700,
+            }}
+          >
             ZIP {selectedZip || ""}
           </h1>
 
-          {/* ZIP-specific content (two demo zips) or blank fallback */}
           {selectedZip ? (
             Content ? (
               <Content />
@@ -225,40 +262,18 @@ function MapContainer() {
         </div>
 
         <style>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
           @keyframes slideUp {
-            from {
-              opacity: 0;
-              transform: translateY(40px) scale(0.96);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
           }
-
-          .modal-content::-webkit-scrollbar {
-            width: 8px;
-          }
-
+          .modal-content::-webkit-scrollbar { width: 8px; }
           .modal-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05); border-radius: 4px;
           }
-
           .modal-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2); border-radius: 4px;
           }
-
           .modal-content::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.3);
           }

@@ -3,3 +3,5 @@
 38118
 38114
 https://www.mapbox.com/gallery#mapbox-dark-2d
+
+"mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541"
