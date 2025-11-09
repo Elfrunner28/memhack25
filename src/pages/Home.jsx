@@ -197,12 +197,6 @@ export default function Home() {
                   requests to create a comprehensive prioritization system.
                 </p>
               </div>
-import MapContainer from "../components/MapContainer";
-
-function Map() {
-  return <MapContainer />;
-}
-
               <div className="problem-card">
                 <div className="problem-icon">🎯</div>
                 <h3>Resource Allocation</h3>
