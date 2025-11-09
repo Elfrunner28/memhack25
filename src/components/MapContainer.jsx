@@ -24,7 +24,7 @@ function MapContainer() {
     map.on("load", async () => {
       console.log("Map style loaded successfully!");
 
-      const geo = await fetch("/memphis.json").then((r) => r.json());
+      const geo = await fetch("/memphis.clean.json").then((r) => r.json());
 
       map.addSource("memphis", {
         type: "geojson",
