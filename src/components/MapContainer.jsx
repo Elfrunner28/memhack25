@@ -22,23 +22,20 @@ const ZIP_COMPONENTS = {
   38127: Zip38127,
 };
 
-// ---- Config ----
-const MAP_STYLE = "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541"; // your dark style
-const HOT_ZIPS = ["38128", "38127", "38118", "38114"]; // always the reddest
+const MAP_STYLE = "mapbox://styles/bomka/cmhqv52hy005d01r0h3udd541";
+const HOT_ZIPS = ["38128", "38127", "38118", "38114"];
 
-// Simple deterministic hash -> [0, 1)
 function hashStringToUnit(str) {
-  let h = 2166136261; // FNV-1a base
+  let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
     h ^= str.charCodeAt(i);
     h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
   }
-  // convert to unsigned 32-bit then normalize
+
   const u = (h >>> 0) / 0xffffffff;
   return u;
 }
 
-// Ease a bit so midtones are richer (feel more “varied”)
 function easeInOut(t) {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
@@ -63,7 +60,6 @@ function MapContainer() {
       zoom: 9.9,
     });
 
-    // Lock the map (no scroll/zoom/pan)
     map.scrollZoom.disable();
     map.dragPan.disable();
     map.dragRotate.disable();
@@ -75,15 +71,13 @@ function MapContainer() {
     mapRef.current = map;
 
     map.on("load", async () => {
-      // Load your polygons
       const rawGeo = await fetch("/memphis.json").then((r) => r.json());
 
-      // Add deterministic heat value per ZIP (non-changing across reloads)
       const geo = {
         ...rawGeo,
         features: rawGeo.features.map((f) => {
           const name = String(f.properties?.Name ?? "");
-          // HOT_ZIPS forced to max (1). Others get seeded value in [0.15, 0.9] then eased.
+
           let heat = HOT_ZIPS.includes(name)
             ? 1
             : easeInOut(0.15 + 0.75 * hashStringToUnit(name));
@@ -97,22 +91,17 @@ function MapContainer() {
         }),
       };
 
-      // Add as a source
       if (map.getSource("memphis")) map.removeSource("memphis");
       map.addSource("memphis", { type: "geojson", data: geo });
 
-      // One fill layer for everything using a color ramp:
-      // white -> soft yellow -> amber -> red
-      // Hot zips will also be heat=1, so they hit the reddest stop.
       map.addLayer({
         id: "zip-fill",
         type: "fill",
         source: "memphis",
         paint: {
-          // Color ramp from heat property
           "fill-color": [
             "case",
-            // Safety: if heat missing, make it very light
+
             ["!", ["has", "heat"]],
             "#ffffff",
             [
@@ -131,34 +120,31 @@ function MapContainer() {
               "#ff2a2a", // red (hottest)
             ],
           ],
-          // Slightly higher opacity so it stands out on dark basemap
+
           "fill-opacity": 0.7,
         },
       });
 
-      // Outline layer so polygons pop on a dark map
       map.addLayer({
         id: "zip-outline",
         type: "line",
         source: "memphis",
         paint: {
-          "line-color": "rgba(255,255,255,0.55)", // light outline for dark base
+          "line-color": "rgba(255,255,255,0.55)",
           "line-width": 1.2,
         },
       });
 
-      // Invisible "hit" layer on top just for clicks/hover on HOT_ZIPS
       map.addLayer({
         id: "hot-zips-hit",
         type: "fill",
         source: "memphis",
         paint: {
-          "fill-opacity": 0, // invisible but still interactive
+          "fill-opacity": 0,
         },
         filter: ["in", ["to-string", ["get", "Name"]], ["literal", HOT_ZIPS]],
       });
 
-      // Cursor + click to open modal (only for the four hot zips)
       map.on("mouseenter", "hot-zips-hit", () => {
         map.getCanvas().style.cursor = "pointer";
       });
@@ -183,7 +169,6 @@ function MapContainer() {
 
   const Content = selectedZip && ZIP_COMPONENTS[selectedZip];
 
-  // Modal to document.body
   const ModalPortal = () => {
     if (!modalOpen) return null;
 

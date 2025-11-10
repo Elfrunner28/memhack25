@@ -17,7 +17,7 @@ export default function Home() {
       const sections = [
         { id: "hero", ref: heroRef },
         { id: "problem", ref: problemRef },
-        { id: "data", ref: dataRef }, // moved "data" up so order matches the DOM (data appears before solution)
+        { id: "data", ref: dataRef },
         { id: "solution", ref: solutionRef },
         { id: "nextSteps", ref: nextStepsRef },
       ];
@@ -203,8 +203,8 @@ export default function Home() {
               <h2 className="section-title">Blight Foresight Blueprint</h2>
               <p className="section-description">
                 Our goal is to turn disconnected events into early warnings and
-                then into actionable priorities for Memphis, so we can
-                intervene before blight takes root.
+                then into actionable priorities for Memphis, so we can intervene
+                before blight takes root.
               </p>
             </div>
 
@@ -251,8 +251,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div style={{ opacity: 0.85, marginTop: 6 }}>
-                  Evictions, police incidents, and minor violations
-                  appear unrelated when seen in isolation.
+                  Evictions, police incidents, and minor violations appear
+                  unrelated when seen in isolation.
                 </div>
               </div>
 
@@ -293,8 +293,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div style={{ opacity: 0.85, marginTop: 6 }}>
-                  Combine events over time → patterns emerge, early
-                  signals of neighborhood stress.
+                  Combine events over time → patterns emerge, early signals of
+                  neighborhood stress.
                 </div>
               </div>
 
@@ -335,8 +335,8 @@ export default function Home() {
                       Predictive Prioritization
                     </div>
                     <div style={{ opacity: 0.85 }}>
-                      Identify neighborhoods on the cusp of deterioration
-                      and prioritize proactive action.
+                      Identify neighborhoods on the cusp of deterioration and
+                      prioritize proactive action.
                     </div>
                   </div>
                 </div>
@@ -467,7 +467,7 @@ export default function Home() {
 
                 <div className="feature">
                   <div className="feature-number">02</div>
-                  <h3>Implment Preventative Measures</h3>
+                  <h3>Implement Preventative Measures</h3>
                   <p>
                     Use predictions to guide proactive blight mitigation
                     strategies, reducing the incidence of blight before it
@@ -487,6 +487,24 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Big Slogan Added Here */}
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: "3.5rem",
+            fontWeight: 800,
+            padding: "80px 20px",
+            color: "var(--primary-color, #a8ff78)",
+            textShadow: "0 0 10px rgba(168, 255, 120, 0.5)",
+            letterSpacing: "-1.5px",
+            lineHeight: 1.1,
+            background: "rgba(0, 0, 0, 0.3)",
+            margin: "40px 0",
+          }}
+        >
+          Remove Blight From Our Sight!
+        </div>
 
         {/* Footer */}
         <footer className="footer">
