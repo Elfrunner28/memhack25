@@ -143,6 +143,7 @@ export default function Home() {
                   <div className="stat-label">Properties Analyzed</div>
                 </div>
               </div>
+              <p className="hero-subtitle">By Karti Bomb, Jack Seigerman, Nima Aflaki</p>
             </div>
           </div>
         </section>
