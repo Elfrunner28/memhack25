@@ -559,6 +559,25 @@ body {
   color: var(--text-primary);
 }
 
+/* High risk badge used in ZIP modal header */
+.high-risk-badge {
+  margin-left: 0.9rem;
+  background: var(--accent-red);
+  color: #ffffff;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ZIP modal title spacing */
+.zip-modal-title {
+  padding-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .legend-item {
   display: flex;
   align-items: center;
@@ -789,7 +808,8 @@ body {
     height: 100vh !important;
     max-height: 100vh !important;
     border-radius: 0 !important;
-    padding: 1rem !important;
+    /* remove outer modal padding so inner elements can span edge-to-edge */
+    padding: 0 !important;
     box-shadow: none !important;
     overflow: auto !important;
   }
@@ -797,6 +817,71 @@ body {
   .modal-content button {
     top: 12px !important;
     right: 12px !important;
+  }
+
+  /* Reduce size of high-risk badge on small screens */
+  .high-risk-badge {
+    font-size: 0.95rem !important;
+    padding: 0.2rem 0.45rem !important;
+    margin-left: 0.6rem !important;
+  }
+
+  /* Ensure ZIP title isn't flush to the left edge on mobile */
+  .zip-modal-title {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    word-break: keep-all;
+  }
+
+  /* Improve modal content scaling for mobile */
+  .modal-content > div > div:first-child {
+    /* force the ZIP component's two-column grid to stack vertically */
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Ensure the modal inner wrapper has its own padding so elements can go side-to-side
+     while still keeping comfortable spacing inside the content. */
+  .modal-content > div {
+    padding: 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Make both the stacked text box and the image/card take full width */
+  .modal-content > div > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .modal-content h3 {
+    font-size: 1.05rem !important;
+  }
+
+  .modal-content p,
+  .modal-content li {
+    font-size: 1rem !important;
+  }
+
+  .modal-content img {
+    max-height: 50vh !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 10px !important;
+  }
+
+  .modal-content > div > div:last-child {
+    /* make image/card section full width and reduce padding */
+    padding: 0.75rem !important;
   }
   
   .problem-grid,

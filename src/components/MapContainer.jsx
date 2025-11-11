@@ -258,29 +258,17 @@ function MapContainer() {
             Back to Map
           </button>
 
-          <h1
-            style={{
-              marginTop: 0,
-              marginRight: 140,
-              fontSize: "2.4rem",
-              fontWeight: 700,
-            }}
-          >
-            ZIP {selectedZip || ""}
-            <span
+            <h1
+              className="zip-modal-title"
               style={{
-                marginLeft: "0.9rem",
-                background: "#ef4444",
-                color: "#fff",
-                padding: "0.4rem 0.6rem",
-                borderRadius: "6px",
-                fontSize: "2rem",
-                fontWeight: 600,
+                marginTop: 0,
+                fontSize: "2.4rem",
+                fontWeight: 700,
               }}
             >
-              High Risk
-            </span>
-          </h1>
+              ZIP {selectedZip || ""}
+              <span className="high-risk-badge">High Risk</span>
+            </h1>
 
           {selectedZip ? (
             Content ? (
