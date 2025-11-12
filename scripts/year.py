@@ -1,8 +1,10 @@
 import csv
 from collections import Counter
+from pathlib import Path
 
-# Open and read the CSV file
-csv_file = 'data.csv'
+# Project root and input/output paths
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+csv_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'data.csv'
 
 # Store all neighborhoods
 neighborhoods = []
@@ -84,7 +86,7 @@ for neighborhood in neighborhoods_to_include:
             sorted_data.append(row)
 
 # Write the new organized CSV
-output_file = 'filtered_data.csv'
+output_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'filtered_data.csv'
 
 with open(output_file, 'w', encoding='utf-8', newline='') as file:
     writer = csv.DictWriter(file, fieldnames=columns_to_keep, delimiter=';', extrasaction='ignore')

@@ -4,10 +4,12 @@ import os
 from datetime import datetime
 from collections import defaultdict
 import numpy as np
+from pathlib import Path
 
-# Directories
-evictions_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Evictions'
-police_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Police'
+# Project root and data directories
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+evictions_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Evictions'
+police_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
 
 # Neighborhoods
 neighborhoods = ['Egypt', 'Frayser', 'Parkway_Village', 'Orange_Mound']
@@ -34,7 +36,7 @@ evictions_data = {neighborhood: defaultdict(int) for neighborhood in neighborhoo
 
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(evictions_dir, filename)
+    filepath = evictions_dir / filename
     
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
@@ -65,7 +67,7 @@ police_data = {neighborhood: defaultdict(int) for neighborhood in neighborhoods}
 
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(police_dir, filename)
+    filepath = police_dir / filename
     
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
@@ -211,8 +213,8 @@ print(f"Shape: {police_array_2022.shape}")
 print(police_array_2022)
 
 # Save arrays to files
-np.save('evictions_2022_array.npy', evictions_array_2022)
-np.save('police_2022_array.npy', police_array_2022)
+np.save(str(PROJECT_ROOT / 'scripts' / 'evictions_2022_array.npy'), evictions_array_2022)
+np.save(str(PROJECT_ROOT / 'scripts' / 'police_2022_array.npy'), police_array_2022)
 
 print("\n" + "=" * 80)
 print("ARRAYS SAVED")

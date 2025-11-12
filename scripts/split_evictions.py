@@ -1,8 +1,10 @@
 import csv
 from collections import Counter
+from pathlib import Path
 
-# Input file
-input_file = 'filtered_evictions.csv'
+# Project root and input file
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+input_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'filtered_evictions.csv'
 
 # Mapping of zip codes to neighborhoods
 zip_to_neighborhood = {

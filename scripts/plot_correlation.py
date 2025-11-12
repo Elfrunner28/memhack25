@@ -4,9 +4,11 @@ import os
 from datetime import datetime
 from collections import defaultdict
 import matplotlib.pyplot as plt
+from pathlib import Path
 
-# Directories
-police_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Police'
+# Project root and data directories
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+police_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
 
 # Only Frayser and Parkway Village
 neighborhoods = ['Frayser', 'Parkway_Village']
@@ -43,7 +45,7 @@ crime_category_data = {neighborhood: defaultdict(lambda: defaultdict(int)) for n
 # Read Police Data
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(police_dir, filename)
+    filepath = police_dir / filename
     
     print(f"Reading {neighborhood} police data...")
     
@@ -69,7 +71,7 @@ print("\n" + "=" * 80)
 print("LOADING BLIGHT DATA")
 print("=" * 80)
 
-service_requests_array = np.load('service_requests_2022_array.npy')
+service_requests_array = np.load(str(PROJECT_ROOT / 'scripts' / 'service_requests_2022_array.npy'))
 print(f"✓ Loaded service requests array: {service_requests_array.shape}")
 
 neighborhoods_sorted = sorted(neighborhoods)

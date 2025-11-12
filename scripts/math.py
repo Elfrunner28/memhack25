@@ -1,13 +1,15 @@
 import numpy as np
+from pathlib import Path
 
 print("=" * 80)
 print("CORRELATION ANALYSIS USING NUMPY ARRAYS (2022)")
 print("=" * 80)
 
-# Load the numpy arrays we created earlier
-evictions_array = np.load('evictions_2022_array.npy')
-police_array = np.load('police_2022_array.npy')
-service_requests_array = np.load('service_requests_2022_array.npy')
+# Project root and arrays (saved in scripts/)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+evictions_array = np.load(str(PROJECT_ROOT / 'scripts' / 'evictions_2022_array.npy'))
+police_array = np.load(str(PROJECT_ROOT / 'scripts' / 'police_2022_array.npy'))
+service_requests_array = np.load(str(PROJECT_ROOT / 'scripts' / 'service_requests_2022_array.npy'))
 
 # Neighborhoods in alphabetical order (matching the array rows)
 neighborhoods = ['Egypt', 'Frayser', 'Orange Mound', 'Parkway Village']

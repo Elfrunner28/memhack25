@@ -4,10 +4,12 @@ import os
 from datetime import datetime
 from collections import defaultdict
 import numpy as np
+from pathlib import Path
 
-# Directories
-police_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Police'
-service_requests_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods'
+# Project root and data directories (project-relative)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+police_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
+service_requests_dir = PROJECT_ROOT / 'data' / 'neighborhoods'
 
 # Neighborhoods
 neighborhoods = ['Egypt', 'Frayser', 'Orange_Mound', 'Parkway_Village']
@@ -33,13 +35,13 @@ print("=" * 80)
 service_category_totals = defaultdict(int)
 
 # Get all CSV files in the hoods directory
-csv_files = [f for f in os.listdir(service_requests_dir) if f.endswith('.csv')]
+csv_files = [f for f in os.listdir(str(service_requests_dir)) if f.endswith('.csv')]
 
 print(f"Found {len(csv_files)} CSV files in {service_requests_dir}")
 
 # Read ALL CSV files
 for filename in csv_files:
-    filepath = os.path.join(service_requests_dir, filename)
+    filepath = service_requests_dir / filename
     
     print(f"Reading {filename}...")
     
@@ -78,7 +80,7 @@ crime_category_totals = defaultdict(int)
 # Read Police Data
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(police_dir, filename)
+    filepath = police_dir / filename
     
     print(f"Reading {neighborhood} police data...")
     

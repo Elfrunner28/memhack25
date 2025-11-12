@@ -3,9 +3,11 @@ import csv
 import os
 from datetime import datetime
 from collections import defaultdict
+from pathlib import Path
 
-# Directory
-police_dir = 'hoods_Police'
+# Project root and police data directory
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+police_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
 
 # Neighborhoods
 neighborhoods = ['Egypt', 'Frayser', 'Parkway_Village', 'Orange_Mound']
@@ -35,7 +37,7 @@ vandalism_data = {neighborhood: defaultdict(int) for neighborhood in neighborhoo
 
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(police_dir, filename)
+    filepath = police_dir / filename
     
     try:
         with open(filepath, 'r', encoding='utf-8') as file:

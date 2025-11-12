@@ -2,9 +2,13 @@ import matplotlib.pyplot as plt
 import csv
 from datetime import datetime
 from collections import Counter
+from pathlib import Path
 
-# Open and read the CSV file
-csv_file = 'filtered_data.csv'
+# Project root and input/output paths
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+csv_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'filtered_data.csv'
+output_dir = PROJECT_ROOT / 'data' / 'neighborhoods'
+output_dir.mkdir(parents=True, exist_ok=True)
 
 # Store all neighborhoods
 neighborhoods = []
@@ -82,12 +86,13 @@ for neighborhood, db in databases.items():
     filename = neighborhood.replace(' ', '_') + '.csv'
     
     # Write the CSV file
-    with open(filename, 'w', encoding='utf-8', newline='') as file:
+    outpath = output_dir / filename
+    with open(outpath, 'w', encoding='utf-8', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=columns, delimiter=';')
         writer.writeheader()
         writer.writerows(db)
     
-    print(f"\n✓ Created: {filename}")
+    print(f"\n✓ Created: {outpath}")
     print(f"  Total Incidents: {len(db)}")
     
     if len(db) > 0:

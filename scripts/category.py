@@ -4,10 +4,14 @@ import os
 from datetime import datetime
 from collections import defaultdict
 from itertools import combinations
+from pathlib import Path
 
-# Directories
-police_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Police'
-evictions_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods_Evictions'
+# Project root (two levels up from scripts/)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Directories (project-relative)
+police_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
+evictions_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Evictions'
 
 # Neighborhoods
 neighborhoods = ['Egypt', 'Frayser', 'Parkway_Village', 'Orange_Mound']
@@ -29,7 +33,7 @@ all_categories = set()
 # Read Police Data
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(police_dir, filename)
+    filepath = police_dir / filename
     
     print(f"Reading {neighborhood} police data...")
     
@@ -55,7 +59,7 @@ for neighborhood in neighborhoods:
 print("\nReading evictions data...")
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(evictions_dir, filename)
+    filepath = evictions_dir / filename
     
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
@@ -81,7 +85,7 @@ print("\n" + "=" * 80)
 print("LOADING BLIGHT DATA")
 print("=" * 80)
 
-service_requests_array = np.load('service_requests_2022_array.npy')
+service_requests_array = np.load(str(PROJECT_ROOT / 'scripts' / 'service_requests_2022_array.npy'))
 print(f"✓ Loaded service requests array: {service_requests_array.shape}")
 
 neighborhoods_sorted = sorted(neighborhoods)

@@ -1,9 +1,11 @@
 import csv
 import os
 from datetime import datetime
+from pathlib import Path
 
-# Input directory (where the eviction CSV files are located)
-input_dir = 'hoods_Evictions'
+# Project root and input directory (project-relative)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+input_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Evictions'
 
 # Neighborhood files
 neighborhoods = ['Egypt', 'Frayser', 'Parkway_Village', 'Orange_Mound']
@@ -19,8 +21,8 @@ columns = [
 ]
 
 # Create directory if it doesn't exist
-if not os.path.exists(input_dir):
-    os.makedirs(input_dir)
+if not input_dir.exists():
+    input_dir.mkdir(parents=True, exist_ok=True)
     print(f"✓ Created directory: {input_dir}")
 
 print("=" * 80)
@@ -30,7 +32,7 @@ print("=" * 80)
 # Process each neighborhood file
 for neighborhood in neighborhoods:
     filename = f"{neighborhood}.csv"
-    filepath = os.path.join(input_dir, filename)
+    filepath = input_dir / filename
     
     # Read the data
     data = []

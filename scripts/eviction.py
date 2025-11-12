@@ -1,8 +1,10 @@
 import csv
+from pathlib import Path
 
-# Input and output file names
-input_file = 'data/eviction-court-cases-shelby-county.csv'
-output_file = 'filtered_evictions.csv'
+# Project root and input/output file names
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+input_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'eviction-court-cases-shelby-county.csv'
+output_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'filtered_evictions.csv'
 
 # Columns to keep
 columns_to_keep = [

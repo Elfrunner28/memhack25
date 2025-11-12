@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import csv
 from collections import defaultdict, Counter
+from pathlib import Path
 
-# Open and read the CSV file
-csv_file = 'filtered_data.csv'
+# Project root and filtered data file
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+csv_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'filtered_data.csv'
 
 # Store all neighborhoods
 neighborhoods = []

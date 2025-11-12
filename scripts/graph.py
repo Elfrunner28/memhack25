@@ -4,9 +4,11 @@ from datetime import datetime
 from collections import defaultdict
 import os
 import numpy as np
+from pathlib import Path
 
-# Directory containing neighborhood CSV files
-hoods_dir = 'C:/Users/nafla/Documents/memhack25/algo_guy/data/hoods'
+# Project root and hoods directory (project-relative)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+hoods_dir = PROJECT_ROOT / 'data' / 'neighborhoods'
 
 # Neighborhood files
 neighborhood_files = {
@@ -25,7 +27,7 @@ print("=" * 80)
 
 # Read each neighborhood's CSV file
 for neighborhood, filename in neighborhood_files.items():
-    filepath = os.path.join(hoods_dir, filename)
+    filepath = hoods_dir / filename
     
     monthly_counts = defaultdict(int)
     
@@ -147,7 +149,7 @@ print(f"Shape: {service_requests_array_2022.shape}")
 print(service_requests_array_2022)
 
 # Save array to file
-np.save('service_requests_2022_array.npy', service_requests_array_2022)
+np.save(str(PROJECT_ROOT / 'scripts' / 'service_requests_2022_array.npy'), service_requests_array_2022)
 
 print("\n" + "=" * 80)
 print("ARRAY SAVED")

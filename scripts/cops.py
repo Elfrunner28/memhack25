@@ -1,16 +1,18 @@
 import csv
 import os
 from collections import Counter
+from pathlib import Path
 
-# Input file
-input_file = 'data/policeReports.csv'
+# Project root and paths
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+input_file = PROJECT_ROOT / 'data' / 'filtered_Data' / 'policeReports.csv'
 
-# Output directory
-output_dir = 'hoods_Police'
+# Output directory (per-neighborhood police CSVs)
+output_dir = PROJECT_ROOT / 'data' / 'neighborhoods_Police'
 
 # Create output directory if it doesn't exist
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+if not output_dir.exists():
+    output_dir.mkdir(parents=True, exist_ok=True)
     print(f"✓ Created directory: {output_dir}")
 
 # Mapping of zip codes to neighborhoods
@@ -96,13 +98,13 @@ files_created = []
 for neighborhood, data in neighborhood_data.items():
     if len(data) > 0:  # Only create file if there's data
         filename = f"{neighborhood}.csv"
-        filepath = os.path.join(output_dir, filename)
-        
+        filepath = output_dir / filename
+
         with open(filepath, 'w', encoding='utf-8', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=columns)
             writer.writeheader()
             writer.writerows(data)
-        
+
         files_created.append(filename)
         print(f"✓ Created: {output_dir}/{filename} ({len(data)} rows)")
     else:
