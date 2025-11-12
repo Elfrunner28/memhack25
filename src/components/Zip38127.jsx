@@ -31,10 +31,12 @@ function Zip38127() {
               marginBottom: "1.5rem",
             }}
           >
-            Frayser demonstrates critical blight risk patterns with multi-factor
-            indicators showing strong predictive correlations. The neighborhood
-            faces compounding challenges requiring comprehensive intervention
-            strategies and resource allocation.
+            Frayser (ZIP 38127) is identified by our near-term blight predictor
+            as showing strong co-occurrence of stressors that historically
+            precede property decline. The model highlights overlapping spikes
+            in eviction activity, police incident clustering, and repeat code
+            enforcement entries, a combination associated with accelerated
+            neighborhood deterioration.
           </p>
           <div
             style={{
@@ -93,15 +95,17 @@ function Zip38127() {
                 marginBottom: "0.5rem",
               }}
             >
-              Current Situation
+              Why the model flagged this neighborhood
             </h4>
             <p>
-              The Frayser neighborhood faces complex, interconnected blight
-              challenges. Analysis reveals concentrated areas where property
-              deterioration accelerates due to combinations of evictions, crime,
-              and code violations. Properties within identified clusters show an
-              85% correlation between these factors and rapid decline.
+              The predictor integrates time-series signals from police reports,
+              eviction filings, and code enforcement cases. For Frayser we are
+              seeing those signals cluster spatially, a pattern that elevates
+              the short-term blight risk score. The model also considers the
+              types of police incidents occurring nearby, and certain violent
+              or drug-related categories increase the weight of the alert.
             </p>
+
             <h4
               style={{
                 color: "#ffffff",
@@ -109,16 +113,28 @@ function Zip38127() {
                 marginBottom: "0.5rem",
               }}
             >
-              Predictive Insights
+              Suggested actionable steps
             </h4>
             <p>
-              Our predictive model identifies properties at immediate risk by
-              analyzing temporal patterns across data sources. Areas showing
-              increased police activity combined with nearby evictions
-              demonstrate a 3.1x higher probability of code violations within 6
-              months. Early detection enables proactive intervention before
-              conditions worsen.
+              Because the model indicates near-term risk, short-term,
+              targeted measures are recommended to interrupt the decline
+              trajectory and stabilize properties.
             </p>
+            <ul style={{ color: "#d0d0e0" }}>
+              <li>
+                Assign extra neighborhood patrols for code enforcement and
+                sanitation on a frequent loop through the flagged area to catch
+                and remediate emerging problems quickly.
+              </li>
+              <li>
+                Deploy community outreach teams and tenant-support programs to
+                reduce evictions and connect residents to services.
+              </li>
+              <li>
+                Coordinate with police and code enforcement for joint
+                operations like boarding, securement, and rapid cleanup.
+              </li>
+            </ul>
           </div>
         </div>
       </div>

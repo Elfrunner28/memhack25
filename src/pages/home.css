@@ -530,6 +530,8 @@ body {
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--glass-shadow);
   overflow: hidden;
+  max-width: var(--container-width);
+  margin: 0 auto;
 }
 
 .map-wrapper-compact {
@@ -537,6 +539,8 @@ body {
   height: 600px;
   border-radius: 1rem;
   overflow: hidden;
+  /* ensure the map wrapper expands to the container width */
+  width: 100%;
 }
 
 .map-legend {

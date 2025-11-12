@@ -68,7 +68,7 @@ function MapContainer() {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: MAP_STYLE,
-      center: [-90.0, 35.085],
+      center: [-90.0, 35.15],
       zoom: 9.9,
     });
 
@@ -317,7 +317,7 @@ function MapContainer() {
 
   return (
     <>
-      <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
+      <div ref={mapContainerRef} style={{ width: "100%", height: "100%" }} />
       <ModalPortal />
     </>
   );
